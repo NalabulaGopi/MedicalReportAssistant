@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediScan AI — Result</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'DM Sans',sans-serif;
+}
+
+body{
+    background:#050a14;
+    color:#e8edf5;
+}
+
+/* GRID BACKGROUND */
+body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size:40px 40px;
+    z-index:0;
+}
+
+/* CONTAINER */
+.container{
+    position:relative;
+    z-index:5;
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+/* HEADER */
+.header{
+    margin-bottom:30px;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:18px;
+    padding:20px;
+}
+
+/* DISEASE BLOCK */
+.disease{
+    margin-bottom:20px;
+    padding:15px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.03);
+}
+
+/* MINI GRID */
+.mini-grid{
+    display:grid;
+    gap:10px;
+    margin-top:10px;
+}
+
+/* MINI CARD */
+.mini-card{
+    padding:10px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.06);
+    display:flex;
+    gap:10px;
+}
+
+/* RISK COLORS */
+.low{color:#5DCAA5;}
+.moderate{color:#EF9F27;}
+.high{color:#F0997B;}
+.critical{color:#E24B4A;}
+
+/* HEALTH SCORE COLORS */
+.score-excellent{color:#22c55e;}
+.score-good{color:#38bdf8;}
+.score-moderate{color:#f59e0b;}
+.score-critical{color:#ef4444;}
+
+#score{
+    font-size:32px;
+    font-weight:bold;
+}
+
+/* BUTTON */
+.btn{
+    margin-top:30px;
+    padding:14px 30px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg,#185FA5,#0F6E56);
+    color:#fff;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <h2>MediScan AI Report</h2>
+</div>
+
+<div class="grid">
+
+<!-- LEFT -->
+<div class="card">
+    <h3>Medical Findings</h3>
+    <div id="diseaseList"></div>
+</div>
+
+<!-- RIGHT -->
+<div style="display:flex;flex-direction:column;gap:20px;">
+
+    <div class="card">
+        <h3>Health Score</h3>
+        <div id="score"></div>
+    </div>
+
+    <div class="card">
+        <h3>Summary</h3>
+        <p id="summary"></p>
+    </div>
+
+    <div class="card">
+        <h3>Diet Plan</h3>
+        <div id="diet" class="mini-grid"></div>
+    </div>
+
+</div>
+
+</div>
+
+<button class="btn" onclick="goBack()">Analyze Another</button>
+
+</div>
+
+<script>
+
+/* GET DATA FROM LOCAL STORAGE */
+const data = JSON.parse(localStorage.getItem("medicalResult"));
+
+if(!data){
+    alert("No data found. Please analyze report first.");
+    window.location.href="upload.html";
+}
+
+/* =========================
+   HEALTH SCORE + COLOR
+========================= */
+const scoreEl = document.getElementById("score");
+scoreEl.innerText = data.healthScore;
+
+if(data.healthScore >= 85){
+    scoreEl.classList.add("score-excellent");
+}
+else if(data.healthScore >= 70){
+    scoreEl.classList.add("score-good");
+}
+else if(data.healthScore >= 50){
+    scoreEl.classList.add("score-moderate");
+}
+else{
+    scoreEl.classList.add("score-critical");
+}
+
+/* =========================
+   SUMMARY
+========================= */
+document.getElementById("summary").innerText = data.summary;
+
+/* =========================
+   DISEASES + RECOMMENDATIONS
+========================= */
+const diseaseList = document.getElementById("diseaseList");
+
+(data.diseases || []).forEach(d => {
+
+    const div = document.createElement("div");
+    div.className = "disease";
+
+    const riskClass = d.riskLevel.toLowerCase();
+
+    let recHTML = "";
+
+    (d.recommendations || []).forEach(r => {
+        recHTML += `
+        <div class="mini-card">
+            <div>✔</div>
+            <div>${r}</div>
+        </div>`;
+    });
+
+    div.innerHTML = `
+        <h3>${d.diseaseName} 
+        <span class="${riskClass}">(${d.riskLevel})</span></h3>
+
+        <p>${d.description}</p>
+
+        <div class="mini-grid">
+            ${recHTML}
+        </div>
+    `;
+
+    diseaseList.appendChild(div);
+});
+
+/* =========================
+   DIET PLAN
+========================= */
+const diet = document.getElementById("diet");
+
+(data.dietPlan || []).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "mini-card";
+    div.innerHTML = `<div>🍎</div><div>${item}</div>`;
+    diet.appendChild(div);
+});
+
+/* =========================
+   BUTTON
+========================= */
+function goBack(){
+    window.location.href="upload.html";
+}
+
+</script>
+
+</body>
+</html>

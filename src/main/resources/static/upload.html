@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MediScan AI — Upload</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#05070d;
+    color:white;
+    min-height:100vh;
+}
+
+/* 🌐 GRID BACKGROUND */
+body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size:40px 40px;
+}
+
+/* 🌊 ORBS */
+.orb{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:.15;
+}
+.orb1{width:400px;height:400px;background:#3a86ff;top:-100px;left:-100px;}
+.orb2{width:300px;height:300px;background:#00f2fe;bottom:-80px;right:-60px;}
+.orb3{width:200px;height:200px;background:#8338ec;top:40%;left:60%;}
+
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    padding:20px 40px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.logo{
+    font-family:'Orbitron';
+    font-size:20px;
+}
+.user{
+    font-size:14px;
+    color:#9fb3d9;
+}
+
+/* GRID */
+.container{
+    display:grid;
+    grid-template-columns:1fr 420px;
+    gap:40px;
+    padding:40px;
+}
+
+/* LEFT */
+.left{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+.heading{
+    font-family:'Orbitron';
+    font-size:36px;
+}
+.sub{
+    color:#9fb3d9;
+}
+.features{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.feature{
+    font-size:14px;
+    color:#b8c7e0;
+}
+.stats{
+    display:flex;
+    gap:20px;
+}
+.stat{
+    flex:1;
+    padding:15px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+/* CARD */
+.card{
+    padding:30px;
+    border-radius:20px;
+    backdrop-filter: blur(25px);
+    background: rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:420px;
+}
+
+/* UPLOAD */
+.upload-wrapper{
+    width:100%;
+    max-width:320px;
+    text-align:center;
+}
+
+.upload{
+    display:block;
+    border:2px dashed rgba(58,134,255,0.4);
+    border-radius:18px;
+    padding:30px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.upload:hover{
+    border-color:#00f2fe;
+    background:rgba(0,242,254,0.08);
+}
+
+.upload.drag{
+    border-color:#00f2fe;
+    background:rgba(0,242,254,0.15);
+}
+
+.upload-inner{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+
+.upload-icon{
+    font-size:36px;
+}
+
+.upload-text .title{
+    font-size:15px;
+}
+
+.upload-text .subtitle{
+    font-size:12px;
+    color:#9fb3d9;
+}
+
+/* FILE CARD */
+.file-card{
+    display:none;
+    margin-top:12px;
+    padding:10px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    font-size:13px;
+
+    justify-content:space-between;
+    align-items:center;
+}
+
+.file-card button{
+    background:none;
+    border:none;
+    color:#aaa;
+    cursor:pointer;
+}
+
+/* BUTTON */
+button{
+    margin-top:15px;
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#3a86ff,#00f2fe);
+    color:white;
+    cursor:pointer;
+}
+
+/* LOADING */
+.loading{
+    display:none;
+    margin-top:10px;
+    font-size:13px;
+    color:#9fb3d9;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+.container{
+grid-template-columns:1fr;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="header">
+<div class="logo">MediScan AI</div>
+<div class="user" id="userName"></div>
+</div>
+
+<div class="container">
+
+<!-- LEFT -->
+<div class="left">
+<div>
+<div class="heading">Medical reports,<br>decoded.</div>
+<div class="sub">
+Upload your report and let AI explain it simply and instantly.
+</div>
+</div>
+
+<div class="features">
+<div class="feature">⚡ Instant results</div>
+<div class="feature">🔒 Secure & private</div>
+<div class="feature">📄 Supports all reports</div>
+</div>
+
+<div class="stats">
+<div class="stat"><h3>98%</h3><p>Accuracy</p></div>
+<div class="stat"><h3>24s</h3><p>Avg time</p></div>
+<div class="stat"><h3>50K+</h3><p>Reports</p></div>
+</div>
+</div>
+
+<!-- RIGHT -->
+<div class="card">
+
+<div class="upload-wrapper">
+
+<label class="upload" id="dropzone">
+<div class="upload-inner">
+<div class="upload-icon">📄</div>
+<div class="upload-text">
+<div class="title">Upload Medical Report</div>
+<div class="subtitle">Drag & drop PDF or click</div>
+</div>
+</div>
+<input type="file" id="file" accept=".pdf" hidden>
+</label>
+
+<div class="file-card" id="fileCard">
+<span id="fileName"></span>
+<button onclick="removeFile()">✕</button>
+</div>
+
+<button onclick="upload()" id="btn">Analyze Report</button>
+
+<div class="loading" id="loading">🧠 AI analyzing...</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+const API="http://localhost:8080";
+
+/* USER */
+const user=JSON.parse(localStorage.getItem("mediUser"));
+if(!user){
+window.location.href="auth.html";
+}
+document.getElementById("userName").innerText="👤 "+(user.name||"User");
+
+/* FILE */
+const dropzone=document.getElementById("dropzone");
+const fileInput=document.getElementById("file");
+const fileCard=document.getElementById("fileCard");
+const fileName=document.getElementById("fileName");
+const btn=document.getElementById("btn");
+const loading=document.getElementById("loading");
+
+fileInput.addEventListener("change",showFile);
+
+function showFile(){
+if(fileInput.files[0]){
+fileCard.style.display="flex";
+fileName.innerText=fileInput.files[0].name;
+}
+}
+
+function removeFile(){
+fileInput.value="";
+fileCard.style.display="none";
+}
+
+/* DRAG */
+dropzone.addEventListener("dragover",e=>{
+e.preventDefault();
+dropzone.classList.add("drag");
+});
+
+dropzone.addEventListener("dragleave",()=>{
+dropzone.classList.remove("drag");
+});
+
+dropzone.addEventListener("drop",e=>{
+e.preventDefault();
+dropzone.classList.remove("drag");
+
+const file=e.dataTransfer.files[0];
+if(file && file.type==="application/pdf"){
+fileInput.files=e.dataTransfer.files;
+showFile();
+}
+});
+
+/* UPLOAD */
+async function upload(){
+const file=fileInput.files[0];
+if(!file) return alert("Select file");
+
+btn.disabled=true;
+loading.style.display="block";
+
+const form=new FormData();
+form.append("file",file);
+
+const res=await fetch(API+"/medical/upload",{method:"POST",body:form});
+const data=await res.json();
+
+localStorage.setItem("medicalResult",JSON.stringify(data));
+window.location.href="result.html";
+}
+</script>
+
+</body>
+</html>
